@@ -1,0 +1,120 @@
+Linux系统：“所见皆文件”
+
+Linux系统目录：
+	bin：存放二进制可执行文件
+	boot：存放开机启动程序
+	dev：存放设备文件：字符设备、块设备
+	home：存放普通用户
+	etc：用户信息和系统配置文件 passwd、group
+	lib：库文件：libc.so.6
+	root：管理员宿主目录（家目录）
+	usr：用户资源管理目录
+
+Linux系统文件类型：7|8种
+	普通文件：-
+	目录文件：d
+	字符设备文件：c
+	块设备文件：b
+	软连接：l
+	管道文件：p
+	套接字：s
+	未知文件。
+
+软连接：快捷方式
+	ln -s 源文件 目标文件
+	为保证软连接可以任意搬移，创建时务必对源文件使用绝对路径。
+
+硬连接：
+	ln 源文件 目标文件
+	操作系统给每一个文件赋予唯一的inode,当有相同inode的文件存在时，彼此同步。
+	删除时，只给硬连接计数减一。减为零时，inode被释放。
+
+创建用户：
+	sudo adduser 用户名		---useradd
+
+修改文件所属用户：
+	sudo chown 用户名 待修改文件。
+
+删除用户：
+	sudo deluser 用户名
+
+创建用户组
+	sudo addgroup 新组名
+
+修改文件所属用户组：
+	sudo chgrp 用户组名 待修改文件。
+
+删除组：
+	sudo delgroup 用户组名
+
+使用chown一次修改所有者和所属组：
+	sudo chown 所有者:所属组 待修改文件。
+
+使用chmod设置不同用户对文件的使用权限：
+	通过+ 、-、= 变更权限 
+	u：所有者 g:所在组 o：其他组 a：所有人(u、g、o的总和)
+	chmod   u=rwx, g=rx, o=x   文件目录名 
+	通过数字更改权限
+	使用二进制一个使用者占3位 例：111 为 7 为读写执行
+	chmod 751 文件目录名 
+
+find命令:找文件
+	-type 按文件类型搜索 d/p/s/c/b/l/ f:文件
+
+	-name 按文件名搜索
+		find ./ name "*fi1e*.jpg"
+
+	-maxdepth指定搜索深度。应作为第一个参数出现。
+		find . / -maxdepth 1 -name "*fi1e*.jpg" 
+
+	-size按文件大小搜索。单位:k、M、G
+		find /home/itcast -size +20M -size -50M
+
+	-atime、mtime、 ctime 天amin、 mmin、 cmin 分钟。
+
+	-exec:将find搜索的结果集执行某-指定命令。
+		find /usr/ -name '*tmp*’ -exec 1s -1d {} \;
+
+	-ok:以交互式的方式将find搜索的结果集执行某-指定命令
+
+	-xargs:将find搜索的结果集执行某-指定命令。当结果 集数量过大时，可以分片映射。
+		find /usr/ -name ” *tmp*’| xargs 1s -1d
+	-print0:
+		find /usr/ -name’ *tmp*' -print0| xargs -0 1s -1d
+
+grep命令:找文件内容
+	grep -r’copy’ ./ -n
+		-n参数：显示行数
+	PS aux | grep’ cupsd'	--检索进程结果集。
+
+软件安装:
+	1.联网
+	2.更新软件资源列表到本地。sudo apt-get update
+	3. 安装sudo apt-get insta11 软件名
+	4.卸载sudo apt-get remove 软件名
+	5.使用软件包(.deb)安装:sudo dpkg -i安装包名。
+
+tar压缩:
+	1. tar -zcvf要生成的压缩包名 压缩材料。
+		tar zcvf test. tar.gz fi1e1 dir2	使用 gzip方 式压缩。
+		tar jcvf test. tar.gz file1 dir2	使用 bzip2方 式压缩。
+
+tar解压:
+	将压缩命令中的c --> x
+		tar zxvf test.tar.gz	使用gzip方式解压缩。
+		tar jxvf test.tar.gz	使用bzip2方式解压缩。
+
+rar压缩:
+	rar a -r压缩包名(带. rar后缀)压缩材料。
+		rar a -r testrar.rar	stdio. h test2. mp3
+
+rar解压:
+	unrar x压缩包名(带.rar后缀)
+
+zip压缩：
+	zip -r 压缩包名(带.zip后缀)压缩材料。
+		zip -r testzip.zip	stdio. h test2. mp3
+
+zip解压：
+	unzip 压缩包名(带.zip后缀)	
+		unzip testzip.zip
