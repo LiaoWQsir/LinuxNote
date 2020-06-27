@@ -1,0 +1,133 @@
+open函数:
+	
+	int open(char *pathname, int f1ags)#inc1ude <unistd. h>
+	参数:
+		pathname:欲打开的文件路径名
+
+		flags:文件打开方式:#include <fcnt1. h>
+		0_ RDONLY |0_WRONLY |0_RDWR 		0_CREAT |0_ APPEND |0 _TRUNC |0_EXCL|0_NONBLOCK ....
+
+	返回值:
+		成功:打开文件所得到对应的 文件描述符(整数)
+		失败: -1， 设置errno
+
+	int open(char *pathnam，int f1ags，mode_ t mode)	123 775
+
+	参数:
+		pathname:欲打开的文件路径名
+		flags:文件打开方式:0_ RDONLY |0 _WRONLY |0_ RDWR	0_ CREAT |0_ APPEND |0_TRUNC |0_ EXCL |0_ _NONBLOCK ...
+		mode:参数3使用的前提，参2指定了 0 _CREAT。	取值8进制数，用来描述文件的访问权限。rwx 0664
+			创建文件最終权限= mode &~ umask
+
+	返回值:
+		成功:打开文件所得到对应的 文件描述符(整数)
+		失败: -1， 设置errno
+
+
+c1ose函数:	
+	int close(int fd);
+
+错误处理函数:		与errno相关。
+	printf(" XXx error: %d\n", errno) ;
+	char *strerror (int errnum) ;
+		printf("xx error: %s\n"， strerror (errno));
+	void perror (const char *s);
+		perror(" open error”);
+
+read函数:
+	ssize_ t rea(int fd, void *buf，size_ _t count):
+	参数:
+		fd:文件描述符
+		buf:存数据的缓冲区
+		count:缓冲区大小
+	返回值:
+		0:读到文件末尾。
+		成功; > 0读到的字节数。
+		失败: -1， 设置 errno
+-		1: 并且errno = EAGIN或EWOULDBLOCK, 说明不是read失败，而是read在以非阻塞方式读-个设备文件(网絡文件) ,并且文件无数据。
+write函数:
+	ssize_ _t write(int fd, const void *buf，size_ _t count);
+	参数:
+		fd:文件描述符
+		buf:待写出数据的缓冲区
+		count:数据大小
+	返回值:
+		成功; > 写入的字节数。
+		失败: -1， 设置 errno
+
+文件描述符: .
+	PCB进程控制块:本质结构体。
+	成员:文件描述符表。
+	文件描述符: 0/1/2/3/4. 。。。/1023	表中可用的最小的。
+	0 - STDIN_ FILENO
+	1 - STDOUT_ FILENO
+	2 - STDERR_ FILENO
+
+阻寒、非阻寒:	是设备文件、 网络文件的属性。
+	产生阻塞的场景。读设备文件。 读网络文件。(读常规文件 无阻塞概念。)
+	/dev/tty -- 终端文件。
+	open(" /dev/tty", 0. _RDWRI0_ NONBLOCK)---设置/dev/tty非阻塞状态。(默认为阻塞状态)
+fcnt1:
+	int (int fd, int cmd, ...)
+	int f1gs = fcnt1(fd, F _GETFL):
+	f1gs |= 0_ NONBLOCK
+	fcnt1(fd, F_ _SETFL，f1gs);
+	获取文件状态: F. _GETFL
+	设置文件状态: F _SETFL
+	1seek函数:
+	off_ _t 1seek(int fd, off_ t offset， int whence);
+	参数:
+	fd:文件描述符
+	offset:偏移量
+	whence:起始偏移位置： SEEK_SET/SEEK_CUR/SEEK_END
+
+	返回值:
+		成功:较起始位置偏移量
+		失败: -1 errno
+	应用场景:
+		1.文件的“读”、“写”使用同一偏移位置。
+		2.使用1seek获取文件大小
+		3.使用1seek拓展文件大小:要想使文件大少真正拓展，必须引起I0操作。
+			使用truncate 函数，直接拓展文件。int ret = truncate(" dict. cp", 250);
+
+传入参数:
+	1.指针作为函数参数。
+	2.同常有const关键字修饰。
+	3.指针指向有效区域，在函数内部做读操作。
+传出参数:
+	1.指针作为函数参数。
+	2.在函数调用之前，指针指向的空间可以无意义，但必须有效。
+	3.在函数内部，做写操作。
+	4。函数调用结束后，充当函数返回值。
+传入传出参数:
+	1.指针作为函数参数。
+	2.在函数调用之前，指针指向的空间有实际意义。
+	3.在函数内部,先做读操作，后做写操作。
+	4..函数调用结束后，充当函数返回值。
+void aaa():
+int aaa(int*p，structstat*p2，strcutstudent*p3);
+bbb()
+{
+	aaa();
+}
+stat/1stat函数:
+	int stat(constchar*path,structstat*buf);
+	参数:
+		path:.  文件路径
+		buf:(传出参数)存放文件属性。
+	返回值:
+		成功:0
+		失败:-1 errno
+	获取文件大小:buf.st__size
+	获取文件类型:  buf.st__mode
+	获取文件权限:buf.st._mode
+	符号穿透:stat会。1stat不会。
+目录操作函数:
+	DIR * opendir (char *name) ;
+	int closedi(DIR *dp);
+	struct dirent *readdir(DIR * dp) ;
+	struct dirent
+	inode
+	chardname[256];
+}
+
